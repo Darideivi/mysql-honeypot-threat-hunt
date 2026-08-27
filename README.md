@@ -172,9 +172,10 @@ The project also reinforced the importance of **correlating multiple data source
 **Skills demonstrated:** Azure security monitoring • Microsoft Defender for Endpoint • Microsoft Sentinel • Log Analytics • KQL • MySQL logging • threat hunting • incident investigation • MITRE ATT&CK • containment
 
 ---
+## 🏁 Final Assessment
 
-## ❓ Open Question
+The investigation confirmed that the internet-facing MySQL service was compromised. External actors gained remote access using the `root` account, performed database reconnaissance, reviewed privileges, created an extortion artifact, and executed destructive SQL that deleted multiple tables.
 
-The RDP brute-force campaign may have produced successful Windows logons, but the available evidence is inconsistent. The primary export showed failures while a separate visualization reported several successes. Because those successes were not reconciled to raw `LogonSuccess` events, I left Windows/RDP compromise **unconfirmed**.
+Although the honeypot also experienced significant RDP brute-force activity, I did not find sufficient evidence to confirm that those attempts resulted in a Windows host compromise.
 
-**Final scope:** confirmed MySQL/database compromise; Windows host compromise not confirmed.
+**Final scope:** Confirmed MySQL/database compromise with data destruction and extortion activity. No confirmed evidence of Windows host compromise, persistence, command-and-control, or lateral movement.
