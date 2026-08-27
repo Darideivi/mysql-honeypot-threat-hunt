@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="screenshots/honeypot-attack-map.png" width="900" alt="MySQL Honeypot Threat Hunt Cover Image" />
+<img width="1536" height="1024" alt="ChatGPT Image Aug 27, 2026, 06_35_14 PM" src="https://github.com/user-attachments/assets/bf731ee6-a2a5-4039-8209-beef82c86b7c" />
 </p>
 # Azure MySQL Honeypot --- Threat Hunt & Incident Investigation
 
