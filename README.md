@@ -121,7 +121,7 @@ Observed sequence:
 
 <img width="2208" height="1104" alt="Honeypot2" src="https://github.com/user-attachments/assets/9524cfad-4de0-4e25-9cb2-25d5b1ed32af" />
 
-```
+
 
 ### Extortion artifact
 
@@ -129,7 +129,7 @@ The attacker created `world.RECOVER_YOUR_DATA_info` and inserted an extortion me
 
 <img width="1992" height="998" alt="ramson" src="https://github.com/user-attachments/assets/9c2837b5-c413-4367-bfec-a04230dc84cf" />
 
----
+
 
 ## 🎯 MITRE ATT&CK Mapping
 
