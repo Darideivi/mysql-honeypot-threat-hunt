@@ -23,7 +23,7 @@ This project simulates a small SOC investigation from start to finish.
 
 - **Environment:** Azure Windows 11 VM (`corp-dr01-fe123`) with an internet-facing MySQL service.
 - **Security stack:** Microsoft Defender for Endpoint, Microsoft Sentinel, Azure Monitor / Log Analytics, KQL, and MySQL logs ingested into `MySQLAudit_CL`.
-- **Investigation window:** August 25–27, 2026.
+- **Investigation window:** August 25–27, 2026. (It Took Just 2 Days for the Honeypot to Get Hit by a Ransom Attack)
 
 ---
 
@@ -92,39 +92,42 @@ The confirmed compromise stayed at the **database layer** in the telemetry revie
 ### Remote MySQL access
 
 ```kql
+let MyDevice = "corp-dr01-fe123";
 MySQLAudit_CL
-| where DeviceName == "corp-dr01-fe123"
-| where Username == "root"
-| where ActionType == "LogonSuccess"
-| where IpAddress != "localhost" and isnotempty(IpAddress)
-| project TimeGenerated, IpAddress, RawData
-| order by TimeGenerated asc
+| extend RawData = replace_string(RawData, "\t", " ")
+| extend DeviceName = tostring(split(_ResourceId, "/")[-1])
+| where DeviceName == MyDevice
+| where RawData has "Connect"
+| where RawData !has "@localhost"
+| project TimeGenerated, RawData
+| order by TimeGenerated desc
 ```
+<img width="1946" height="1146" alt="Honeypot1" src="https://github.com/user-attachments/assets/1c3b8334-75f9-43a3-877e-5834047b9cb9" />
 
 ### Destructive SQL activity
 
 ```kql
+let MyDevice = "corp-dr01-fe123";
 MySQLAudit_CL
-| where DeviceName == "corp-dr01-fe123"
-| where Query has_any ("DROP TABLE", "DROP DATABASE", "FOREIGN_KEY_CHECKS")
-| project TimeGenerated, Query, RawData
+| extend RawData = replace_string(RawData, "\t", " ")
+| extend DeviceName = tostring(split(_ResourceId, "/")[-1])
+| where DeviceName == MyDevice
+| where RawData has_any ("DROP TABLE", "DROP DATABASE", "FOREIGN_KEY_CHECKS")
+| project TimeGenerated, RawData
 | order by TimeGenerated asc
 ```
 
 Observed sequence:
 
-```sql
-SET FOREIGN_KEY_CHECKS=0;
-DROP TABLE IF EXISTS world.country;
-DROP TABLE IF EXISTS world.city;
-DROP TABLE IF EXISTS world.countrylanguage;
-SET FOREIGN_KEY_CHECKS=1;
-COMMIT;
+<img width="2208" height="1104" alt="Honeypot2" src="https://github.com/user-attachments/assets/9524cfad-4de0-4e25-9cb2-25d5b1ed32af" />
+
 ```
 
 ### Extortion artifact
 
 The attacker created `world.RECOVER_YOUR_DATA_info` and inserted an extortion message containing payment/contact information. This linked the destructive activity to a financially motivated extortion pattern rather than normal administration.
+
+<img width="1992" height="998" alt="ramson" src="https://github.com/user-attachments/assets/9c2837b5-c413-4367-bfec-a04230dc84cf" />
 
 ---
 
